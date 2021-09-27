@@ -3,14 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="fi.thiago.todolocation">
 
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the "MyLocation" functionality.
+    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-feature
-        android:name="android.hardware.location.gps" />
-    <!-- and/or -->
-    <uses-feature
-        android:name="android.hardware.location.network"
-        />
+
+    <uses-feature android:name="android.hardware.location.gps" /> <!-- and/or -->
+    <uses-feature android:name="android.hardware.location.network" />
 
     <application
         android:allowBackup="true"
@@ -19,9 +21,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TODOLocation">
-        <service android:name="MapsActivity"
-            android:foregroundServiceType="location"
-            tools:ignore="Instantiatable"></service>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -36,19 +35,17 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".MainActivity"
+            android:exported="true">
 
-            android:name=".MapsActivity"
-            android:exported="true"
-            android:label="@string/title_activity_maps"
-
-
-            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>
