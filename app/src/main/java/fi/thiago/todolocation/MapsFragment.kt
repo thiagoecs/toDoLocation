@@ -14,8 +14,34 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
+import android.widget.Toast
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener
+import com.google.android.gms.maps.model.CircleOptions
+import com.google.android.gms.maps.model.Marker
+
+import com.google.android.gms.maps.model.Circle
+
+import android.app.ProgressDialog
+import android.location.Location
+
 
 class MapsFragment :  SupportMapFragment(), OnMapReadyCallback {
+
+/*
+    val radiusInMeters = 50.0
+    val strokeColor = -0x10000 //red outline
+    val shadeColor = 0x44ff0000 //opaque red fill
+    val circleOptions =
+        CircleOptions().center(position).radius(radiusInMeters).fillColor(shadeColor)
+            .strokeColor(strokeColor).strokeWidth(8f)
+
+ */
+
+
+    //private var mCircle = mGoogleMap?.addCircle(circleOptions)!!
+    private var mMarker: Marker? = null
+    private var isNotified = false
+    private var mCircle: Circle? = null
 
 
     var mGoogleMap: GoogleMap? = null
@@ -47,6 +73,9 @@ class MapsFragment :  SupportMapFragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
+        val mLatitude = 60.179225
+        val mLongitude = 24.830193
+
 
 
 
@@ -63,6 +92,38 @@ class MapsFragment :  SupportMapFragment(), OnMapReadyCallback {
                     "GEOLOCATION",
                     "last location latitude:${it?.latitude} and longitude: ${it?.longitude}"
                 )
+
+
+
+
+/*
+                val distance = FloatArray(2)
+                mCircle?.center?.let {
+                    Location.distanceBetween(fusedLocationClient.lastLocation.result.latitude
+                        , fusedLocationClient.lastLocation.result.longitude,
+                        it.latitude, mCircle!!.center.longitude, distance
+                    )
+                }
+                if(mCircle != null) {
+                    if (distance[0] < mCircle?.radius!! && !isNotified) {
+                        Toast.makeText(
+                            activity,
+                            "Inside 1, distance from center: " + distance[0] + " radius: " + (mCircle?.radius
+                                    ),
+                            Toast.LENGTH_LONG
+                        ).show()
+                        isNotified = true
+                    } else {
+                        isNotified = false
+                    }
+                }
+
+ */
+
+
+
+
+
                 val currentLoc = LatLng(it.latitude, it.longitude)
                 mGoogleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 15f))
             }
@@ -72,6 +133,40 @@ class MapsFragment :  SupportMapFragment(), OnMapReadyCallback {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
                 for (location in locationResult.locations) {
+
+
+/*
+                    val distance = FloatArray(2)
+                    mCircle?.center?.let {
+                        Location.distanceBetween(locationResult.lastLocation.latitude
+                            , locationResult.lastLocation.longitude,
+                            it.latitude, mCircle!!.center.longitude, distance
+                        )
+                    }
+                    if(mCircle != null) {
+                        if (distance[0] < mCircle?.radius!! && !isNotified) {
+                            Toast.makeText(
+                                activity,
+                                "Inside 2, distance from center: " + distance[0] + " radius: " + (mCircle?.radius
+                                        ),
+                                Toast.LENGTH_LONG
+                            ).show()
+                            isNotified = true
+                        } else {
+                            isNotified = false
+                        }
+                    }
+
+ */
+                    Toast.makeText(
+                        activity,
+                        "Am I moving?",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+
+
+
                     Log.d(
                         "GEOLOCATION",
                         "new location latitude: ${location.latitude} and longitude: ${location.longitude}"
@@ -84,6 +179,76 @@ class MapsFragment :  SupportMapFragment(), OnMapReadyCallback {
         setMapLongClick(googleMap)
         setPoiClick(googleMap)
         enableMyLocation()
+
+
+
+        //override fun onMyLocationChange
+
+        googleMap.setOnMyLocationChangeListener { location ->
+
+            val distance = FloatArray(2)
+
+                 /*
+                 Location.distanceBetween( mMarker.getPosition().latitude, mMarker.getPosition().longitude,
+                 mCircle.getCenter().latitude, mCircle.getCenter().longitude, distance);
+                 */
+
+            mCircle?.center?.let {
+                Location.distanceBetween(location.latitude, location.longitude,
+                    it.latitude, mCircle!!.center.longitude, distance
+                )
+            }
+/*
+            Toast.makeText(
+                activity,
+                "Am I moving?",
+                Toast.LENGTH_LONG
+            ).show()
+
+ */
+
+
+/*
+            if (distance[0] > mCircle?.radius!!) {
+                Toast.makeText(
+                    activity,
+                    "Outside, distance from center: " + distance[0] + " radius: " + (mCircle?.radius
+                        ),
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                Toast.makeText(
+                    activity,
+                    "Inside, distance from center: " + distance[0] + " radius: " + (mCircle?.radius
+                        ),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+
+ */
+
+            if(mCircle != null) {
+                if (distance[0] < mCircle?.radius!! && isNotified == false) {
+                    Toast.makeText(
+                        activity,
+                        "Inside 3, distance from center: " + distance[0] + " radius: " + (mCircle?.radius
+                                ),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    isNotified = true
+                } else if (distance[0] > mCircle?.radius!!){
+                    isNotified = false
+                }
+            }
+
+
+
+        }
+
+
+        //val latLng = LatLng(mLatitude, mLongitude)
+        //drawMarkerWithCircle(latLng)
 
     }
 
@@ -128,6 +293,16 @@ class MapsFragment :  SupportMapFragment(), OnMapReadyCallback {
             val result = address[0].getAddressLine(0)
 
 
+            val radiusInMeters = 50.0
+            val strokeColor = -0x10000 //red outline
+            val shadeColor = 0x44ff0000 //opaque red fill
+            val circleOptions =
+                CircleOptions().center(latLng).radius(radiusInMeters).fillColor(shadeColor)
+                    .strokeColor(strokeColor).strokeWidth(8f)
+            mCircle = mGoogleMap?.addCircle(circleOptions)!!
+
+
+
             val snippet = String.format(
                 Locale.getDefault(),
                 "Lat: %1$.5f, Long: %2$.5f",
@@ -140,7 +315,9 @@ class MapsFragment :  SupportMapFragment(), OnMapReadyCallback {
                     .position(latLng)
                     .title(result)
                     .snippet(snippet)
+
             )
+            //drawMarkerWithCircle(latLng)
         }
     }
 
@@ -155,4 +332,22 @@ class MapsFragment :  SupportMapFragment(), OnMapReadyCallback {
             poiMarker?.showInfoWindow()
         }
     }
+
+
+
+
+
+    private fun drawMarkerWithCircle(position: LatLng) {
+        val radiusInMeters = 50.0
+        val strokeColor = -0x10000 //red outline
+        val shadeColor = 0x44ff0000 //opaque red fill
+        val circleOptions =
+            CircleOptions().center(position).radius(radiusInMeters).fillColor(shadeColor)
+                .strokeColor(strokeColor).strokeWidth(8f)
+        mCircle = mGoogleMap?.addCircle(circleOptions)!!
+        val markerOptions = MarkerOptions().position(position)
+        mMarker = mGoogleMap?.addMarker(markerOptions)
+    }
+
+
 }
