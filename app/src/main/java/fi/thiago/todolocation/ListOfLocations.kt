@@ -1,10 +1,19 @@
 package fi.thiago.todolocation
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.fragment_list_of_locations.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +29,10 @@ class ListOfLocations : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private val db = Firebase.firestore
+    private val todoList = db.collection("todoList")
+    val todoLocationList = mutableListOf<TodoModel>()
+    lateinit var recyclverView : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +45,15 @@ class ListOfLocations : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list_of_locations, container, false)
+    ): View {
+        val view: View = inflater.inflate(R.layout.fragment_list_of_locations, container, false)
+        recyclverView = view.findViewById<RecyclerView>(R.id.recycler_todo_locations)
+        val fabButton = view.findViewById<FloatingActionButton>(R.id.fabAdd)
+        recyclverView.layoutManager = LinearLayoutManager(context)
+        fabButton?.setOnClickListener {
+            it.context.startActivity(Intent(it.context, AddLocationsActivity::class.java))
+        }
+        return view
     }
 
     companion object {
@@ -54,6 +73,23 @@ class ListOfLocations : Fragment() {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
                 }
+            }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        todoList
+            .get()
+            .addOnSuccessListener {
+                todoLocationList.clear()
+                for (document in it) {
+                    val todoLocList = document.toObject<TodoModel>()
+                    todoLocList.id = document.id
+                    todoLocationList.add(todoLocList)
+                }
+                recyclverView.adapter = TodoLocationAdatper(todoLocationList)
+            }.addOnFailureListener {
+                Log.e("reuslt",it.message.toString())
             }
     }
 }
