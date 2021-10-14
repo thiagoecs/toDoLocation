@@ -5,7 +5,7 @@ When the user is close enough to the location, he will receive a notification, r
 
 ## Getting Started:
 
-Follow the directions here to generate your API key: https://developers.google.com/maps/documentation/android/start#get-key
+Follow the directions here to generate your API key: https://developers.google.com/maps/documentation/android/start#get-key .
 Follow instructions on file template_google_maps_api.xml to insert you API key, otherwise the app will not work.
 
 # Bugs
