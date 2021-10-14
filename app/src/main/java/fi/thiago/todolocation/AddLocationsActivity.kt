@@ -21,17 +21,13 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_add_locations.*
 
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-
-
 class AddLocationsActivity : AppCompatActivity(), OnMapReadyCallback {
-    var latLong: LatLng? = null
-    val MAP_CAMERA_ZOOM = 11f
+    private val MAP_CAMERA_ZOOM = 11f
     private lateinit var itemsData: String
-    var marker: Marker? = null
-    val hashMap: HashMap<String, Boolean> = HashMap()
-    var lat: Double = 0.0
-    var long: Double = 0.0
+    private var marker: Marker? = null
+    private val hashMap: HashMap<String, Boolean> = HashMap()
+    private var lat: Double = 0.0
+    private var long: Double = 0.0
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

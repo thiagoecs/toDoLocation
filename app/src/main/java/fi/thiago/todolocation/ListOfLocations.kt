@@ -13,7 +13,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.fragment_list_of_locations.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,8 +30,8 @@ class ListOfLocations : Fragment() {
     private var param2: String? = null
     private val db = Firebase.firestore
     private val todoList = db.collection("todoList")
-    val todoLocationList = mutableListOf<TodoModel>()
-    lateinit var recyclverView : RecyclerView
+    private val todoLocationList = mutableListOf<TodoModel>()
+    private lateinit var recyclverView : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +46,7 @@ class ListOfLocations : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_list_of_locations, container, false)
-        recyclverView = view.findViewById<RecyclerView>(R.id.recycler_todo_locations)
+        recyclverView = view.findViewById(R.id.recycler_todo_locations)
         val fabButton = view.findViewById<FloatingActionButton>(R.id.fabAdd)
         recyclverView.layoutManager = LinearLayoutManager(context)
         fabButton?.setOnClickListener {

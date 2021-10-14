@@ -12,6 +12,25 @@
         android:layout_height="0dp"
         tools:listitem="@layout/todo_item_row"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/updateHashmap"
+        />
+
+    <EditText
+        android:id="@+id/updateHashmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/updateButton"
+        android:hint="@string/add_more_items"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        />
+
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/update"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
